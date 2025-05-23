@@ -11,8 +11,15 @@ ENV VARS: POLYGON_KEY, FINTEL_KEY, TG_TOKEN, TG_CHAT
 import os, time, requests, datetime, logging
 from math import isclose
 
-TICKERS = ['RGC','LUCY','PONY','BDMD','MRNO','TIVC',
-           'OMH','BRLS','CELU','ARQQ','NIVF','UP']
+TICKERS = [
+    'RGC', 'LUCY', 'PONY', 'BDMD', 'MRNO',
+    'TIVC', 'OMH', 'BRLS', 'CELU', 'ARQQ',
+    'NIVF', 'UP',  # 12 originali
+    'AYTU', 'DRMA', 'COSM', 'TRKA', 'FNGR',
+    'HLBZ', 'CDIO', 'TOP',  'CYN',  'HOLO',
+    'HKD',  'UCAR', 'SNTI', 'PXMD', 'TOPS',
+    'BRTX', 'MEDS', 'BOXD'                # +18 = 30 totali
+]
 
 POLY   = os.getenv('POLYGON_KEY')
 FINTEL = os.getenv('FINTEL_KEY')
