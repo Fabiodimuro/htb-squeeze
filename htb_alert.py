@@ -39,7 +39,7 @@ def quote(tic):
     url = f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{tic}?apiKey={POLY}"
     js  = requests.get(url, headers=HEADERS, timeout=10).json()
     if 'ticker' not in js:            # NOT_FOUND -> salta
-        raise ValueError('no snapshot')
+        return None, None   # salta silenziosamente il ticker
     snap = js['ticker']
     price = snap['lastTrade']['p'] if snap.get('lastTrade') else snap['day']['c']
     vol   = snap['day']['v']
