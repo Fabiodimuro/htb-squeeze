@@ -46,10 +46,18 @@ def quote(tic):
     return float(price), int(vol)
 
 def borrow_data(tic):
-    j = requests.get(f'https://fintel.io/api/ss/us/{tic}?token={FINTEL}',
-                     headers={'User-Agent': 'HTB-Screener/1.0'}, timeout=10).json()['data'][0]
-    return float(j['fee']) * 100, int(j['available'])
-
+    try:
+        r = requests.get(f'https://fintel.io/api/ss/us/{tic}?token={FINTEL}',
+                         headers={'User-Agent': 'HTB-Screener/1.0'}, timeout=10)
+        if not r.ok:
+            raise ValueError(f"HTTP error {r.status_code}")
+        j = r.json()
+        if 'data' not in j or not j['data']:
+            raise ValueError("no borrow data")
+        return float(j['data'][0]['fee']) * 100, int(j['data'][0]['available'])
+    except Exception as e:
+        logging.error(f"borrow_data {tic}: {e}")
+        return 0, 999999  # fallback: fee basso e availability alta, quindi il ticker viene ignorato
 def vwap(tic):
     stock = yf.Ticker(tic)
     data = stock.history(period="30m", interval="1m")
