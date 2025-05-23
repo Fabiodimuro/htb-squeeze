@@ -39,19 +39,22 @@ def pdh(tic):
     h=requests.get(url,timeout=10).json()['results'][0]['h']
     PDH_CACHE[tic]={'h':h,'ts':datetime.datetime.utcnow()}
     return h
-
 def quote(tic):
     url = f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{tic}?apiKey={POLY}"
-    r   = requests.get(url, headers=HEADERS, timeout=10)
-    if not r.ok or r.text.strip() == '' or r.headers.get('Content-Type') != 'application/json':
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=10)
+        r.raise_for_status()
+        js = r.json()
+        if 'ticker' not in js:
+            logging.warning(f"{tic}: 'ticker' not in response JSON: {js}")
+            raise ValueError('no snapshot')
+        snap = js['ticker']
+        price = snap['lastTrade']['p'] if snap.get('lastTrade') else snap['day']['c']
+        vol   = snap['day']['v']
+        return float(price), int(vol)
+    except Exception as e:
+        logging.error(f"quote() error for {tic} – URL: {url} – Response: {r.text} – {e}")
         raise ValueError('no snapshot')
-    js  = r.json()
-    if 'ticker' not in js:
-        raise ValueError('no snapshot')
-    snap = js['ticker']
-    price = snap['lastTrade']['p'] if snap.get('lastTrade') else snap['day']['c']
-    vol   = snap['day']['v']
-    return float(price), int(vol)
 def borrow_data(tic):
     j=requests.get(f'https://fintel.io/api/ss/us/{tic}?token={FINTEL}',
                    headers=HEADERS,timeout=10).json()['data'][0]
