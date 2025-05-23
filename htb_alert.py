@@ -80,4 +80,20 @@ def main_loop():
                 trigger=None
                 if rv>=3 and price>pd:
                     trigger='RVOL + PDH breakout'
-                elif vw
+                elif vw and price>vw and price<pd and not isclose(price,pd,rel_tol=1e-3):
+                    trigger='VWAP reclaim'
+
+                if trigger:
+                    msg=(f"BUY-WATCH {tic}\n"
+                         f"Price {price:.2f} USD  RVOL {rv:.2f}\n"
+                         f"Borrow fee {fee:.0f}% | Avail {avail} sh\n"
+                         f"Trigger: {trigger}")
+                    alert(msg)
+                    logging.info('Alert sent %s',tic)
+            except Exception as e:
+                logging.error('%s: %s',tic,e)
+        time.sleep(900)  # 15 min
+
+if __name__ == '__main__':
+    alert('TEST ALERT – worker avviato correttamente')
+    main_loop()
