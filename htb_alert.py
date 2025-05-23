@@ -35,11 +35,13 @@ def pdh(tic):
     return h
 
 def quote(tic):
-    # snapshot endpoint – free tier
     url = f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{tic}?apiKey={POLY}"
-    js  = requests.get(url, headers=HEADERS, timeout=10).json()
-    if 'ticker' not in js:            # NOT_FOUND -> salta
-        return None, None   # salta silenziosamente il ticker
+    r   = requests.get(url, headers=HEADERS, timeout=10)
+    if not r.ok or r.text.strip() == '' or r.headers.get('Content-Type') != 'application/json':
+        raise ValueError('no snapshot')
+    js  = r.json()
+    if 'ticker' not in js:
+        raise ValueError('no snapshot')
     snap = js['ticker']
     price = snap['lastTrade']['p'] if snap.get('lastTrade') else snap['day']['c']
     vol   = snap['day']['v']
