@@ -96,10 +96,10 @@ def main_loop():
                 if trigger:
                    # sostituisci il blocco 97-101 con questo
 msg = (
-    f"BUY-WATCH {tic}\n"
-    f"Price {price:.2f} USD  RVOL {_rvol:.2f}\n"
-    f"Borrow fee {fee:.0f}% | Avail {avail} sh\n"
-    f"Trigger: {trigger}"
+        f"BUY-WATCH {tic}\n"
+        f"Price {price:.2f} USD  RVOL {_rvol:.2f}\n"
+        f"Borrow fee {fee:.0f}% | Avail {avail} sh\n"
+        f"Trigger: {trigger}"
 )
                     alert(msg)
                     logging.info('Alert sent %s', tic)
