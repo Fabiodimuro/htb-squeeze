@@ -35,10 +35,14 @@ def pdh(tic):
     return h
 
 def quote(tic):
-    url = f'https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{tic}?apiKey={POLY}'
-    j   = requests.get(url, headers=HEADERS, timeout=10).json()['ticker']
-    price = j['lastTrade']['p']              # last trade price
-    vol   = j['day']['v']                   # cumulative volume today
+    # snapshot endpoint – free tier
+    url = f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{tic}?apiKey={POLY}"
+    js  = requests.get(url, headers=HEADERS, timeout=10).json()
+    if 'ticker' not in js:            # NOT_FOUND -> salta
+        raise ValueError('no snapshot')
+    snap = js['ticker']
+    price = snap['lastTrade']['p'] if snap.get('lastTrade') else snap['day']['c']
+    vol   = snap['day']['v']
     return float(price), int(vol)
 def borrow_data(tic):
     j=requests.get(f'https://fintel.io/api/ss/us/{tic}?token={FINTEL}',
