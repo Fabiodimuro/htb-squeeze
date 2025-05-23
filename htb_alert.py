@@ -12,15 +12,14 @@ import os, time, requests, datetime, logging
 from math import isclose
 
 TICKERS = [
-    'RGC', 'LUCY', 'PONY', 'BDMD', 'MRNO',
-    'TIVC', 'OMH', 'BRLS', 'CELU', 'ARQQ',
-    'NIVF', 'UP',  # 12 originali
-    'AYTU', 'DRMA', 'COSM', 'TRKA', 'FNGR',
-    'HLBZ', 'CDIO', 'TOP',  'CYN',  'HOLO',
-    'HKD',  'UCAR', 'SNTI', 'PXMD', 'TOPS',
-    'BRTX', 'MEDS', 'BOXD'                # +18 = 30 totali
+    # senza S-3 / ATM
+    'RGC','LUCY','PONY','BDMD','MRNO',
+    'TIVC','OMH','BRLS','NIVF','UP',      # 10 già ok
+    'HNRA','DUO','CXAI','LOCL','LUNR',
+    'ENSC','SAI','GCT','GDC','APLM',
+    'SPRC','HCWB','PEGY','NOGN','AMDX',
+    'TNYA','SERA','PXLW','AKAN','INPX'    # 20 sostituti
 ]
-
 POLY   = os.getenv('POLYGON_KEY')
 FINTEL = os.getenv('FINTEL_KEY')
 TG_TOKEN = os.getenv('TG_TOKEN')
